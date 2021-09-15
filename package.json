@@ -1,0 +1,32 @@
+{
+  "name": "com.skipline",
+  "version": "1.0.0",
+  "description": "An example template for MDIA 4295 Week X lab.",
+  "repository": "",
+  "bugs": "",
+  "main": "index.js",
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova:template"
+  ],
+  "author": "C Galloway",
+  "license": "Apache-2.0",
+  "displayName": "SkipLine",
+  "devDependencies": {
+    "cordova-android": "^9.1.0",
+    "cordova-plugin-geolocation": "^4.1.0",
+    "cordova-plugin-whitelist": "^1.3.4"
+  },
+  "dependencies": {},
+  "cordova": {
+    "plugins": {
+      "cordova-plugin-whitelist": {},
+      "cordova-plugin-geolocation": {
+        "GPS_REQUIRED": "true"
+      }
+    },
+    "platforms": [
+      "android"
+    ]
+  }
+}

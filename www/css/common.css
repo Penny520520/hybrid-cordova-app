@@ -1,0 +1,356 @@
+/****************************/
+/****** global ********/
+/****************************/
+body {
+    font-family: 'Asap Condensed';   
+    font-size: 14px;    
+}
+
+img{
+    width: 100%;
+}
+
+.btn {
+    color: white;
+    background-color:#65CA41;
+    padding: 4px 15px;
+}
+/* why inside-center doesn't work */
+.inside-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.bg-center {
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: cover;
+} 
+
+
+
+/************************
+****** header****** 
+************************/
+
+.head {
+    height: 50px;
+    background-color: #F5D100 ;
+    color: white;
+    position: relative;
+}
+
+.head h1 {
+    font-size: 30px;
+}
+
+.head .inside-center{
+    top: 17%;
+}
+
+/************************
+****** search bar****** 
+************************/
+.search-bar {
+    text-align: center;
+    padding: 15px;
+}
+
+.search-bar input {
+    width: 265px;
+}
+
+/************************
+****** banner****** 
+************************/
+.bnr {
+    background-image: url(../img/banner.jpg);
+    height: 25vh;
+    max-height: 450px;
+    opacity: 0.8;
+    position: relative;
+}
+
+.bnr .bnr-content {
+    transform: translate(-145%, -56%);
+}
+
+.bnr h3 {
+    color: black;
+    font-weight: 600;
+    font-size: 26px;
+}
+
+.bnr .discount {
+    background-color: #65CA41 ;
+    border-radius: 50%;
+    color: white;
+    width: 70px;
+    height: 70px;
+    margin: 10px auto;
+
+}
+
+.bnr span {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+/************************
+****** restaurants****** 
+************************/
+
+.restaurants h2 {
+    font-weight: 600;
+    margin: 10px 15px;
+}
+.restaurants img{
+    height: 120px;
+    object-fit: cover;
+}
+
+.restaurants h3 {
+    font-size: 14px;
+    margin: 10px 0;
+}
+
+/************************
+****** profile****** 
+************************/
+.profile {
+    height: 180px;
+    position: relative;
+}
+
+.profile h2 {
+    color:#65CA41 ;
+}
+
+.name {
+    background-color: #f8f8f8 ;
+    height: 170px;
+    position: relative;
+}
+
+.name .name-left {
+    position: relative;
+}
+
+hr {
+    height: 0.5px;
+    background-color: #9c9c9c;
+}
+
+.name .name-right {
+    text-align: left;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.name img {
+    height: 85px;
+    width: 85px;
+    border-radius: 50%;
+}
+
+.contact-info {
+    margin: 40px 10px;
+}
+
+.contact-info .row {
+    align-items: flex-end;
+}
+
+.contact-info h4{
+    font-weight: 600;
+    font-size: 20px;
+}
+.contact-info p {
+    font-size: 16px;
+    text-align: left;
+}
+/************************
+****** que****** 
+************************/
+.que .row{
+    background-color: #f8f8f8 ;
+    padding: 10px;
+    margin: 10px;
+    position: relative;
+}
+.que-title {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+}
+.que h2 {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.que-title p {
+    color:#F5D100 ;
+    font-weight: 600;
+}
+.que p {
+    font-size: 17px;
+}
+.que .btn {
+    float: right;
+    margin-top: -20px;
+}
+
+.process .btn {
+    margin-right: 5px;
+    width: 60px;
+    padding: 5px;
+}
+
+/************************
+****** enter queue****** 
+************************/
+.enterQue-name {
+    font-size: 18px;
+    margin: 10px;
+}
+
+.enterQue-name span {
+    font-weight: 600;
+}
+.que-resName {
+    position: relative;
+    height: 35px;
+    color: #65CA41;
+    font-weight: 600;
+}
+
+.enterQue {
+    width: 80%;
+    margin: 20px auto;
+}
+
+.enterQue .firstRow {
+    background:#FFA814 ;
+}
+
+.enterQue .leftCol {
+    font-size: 30px;
+    color: white;
+    font-weight: 600;
+    padding-left: 45px;
+}
+
+.enterQue img {
+    padding-top: 15px;
+}
+
+.enterQue .secondRow {
+    background:#F5D100 ;
+    text-align: center;
+    font-size:35px ;
+    height: 90px;
+    position: relative;
+}
+
+.enterQue .num {
+    margin: 40px auto;
+    text-align: center;
+    font-size:25px ;
+    font-weight: 600;
+}
+
+.num img {
+    height: 80px;
+    width: auto;
+}
+
+.btn-center {
+    text-align: center;
+}
+
+.form-group {
+    margin: 41px;
+}
+
+
+/************************
+****** restaranuts****** 
+************************/
+.restaurant {
+    position: relative;
+    height: 75px ;
+    color:#65CA41 ;
+    font-weight: 600;
+}
+
+.res-content{
+    margin: 0 20px;
+}
+
+.img-res {
+    height: 200px;
+    object-fit: cover;
+}
+
+.res-content h3{
+    font-size: 20px;
+    font-weight: 600;
+    margin-top: 10px;
+}
+
+.res-content li {
+    font-size: 12px;
+}
+
+.res-content .res-btn{
+    text-align: center;
+}
+
+.res-content .btn {
+    margin: 20px 0 25px;
+}
+
+
+/************************
+****** onsen ui ****** 
+************************/
+
+.ons-tabbar__footer{
+    height: 60px;
+    align-items: center;
+}
+    
+.tabbar__icon{
+    font-size: 30px;
+}
+
+/************************
+******nearbyStores ****** 
+************************/
+.title-btn {
+    margin: 15px 15px;
+    background-color:#F5D100;
+    color: black;
+}
+
+.location-container {
+    margin-left: 15px;
+}
+
+.location-container .location {
+    margin-bottom: 15px;
+}
+
+.load-btn {
+    margin: 30px auto;
+    text-align: center;
+    display: block;
+    background-color: blanchedalmond;
+    color: black;
+    font-weight: 700;
+    
+}

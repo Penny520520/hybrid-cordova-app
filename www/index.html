@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta name="format-detection" content="telephone=no">
+  <meta name="msapplication-tap-highlight" content="no">
+  <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover">
+
+  <link rel="stylesheet" href="./lib/onsenui/css/onsenui.css">
+  <link rel="stylesheet" href="./lib/onsenui/css/onsen-css-components.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="./lib/onsenui/js/onsenui.min.js"></script>
+
+  <!-- google font -->
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Asap+Condensed:ital,wght@0,400;0,600;0,700;1,400&display=swap">
+  <!-- reset css -->
+  <link rel="stylesheet" href="css/reset.css">
+  <!-- bootstrap -->
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <!-- Personal css -->
+  <link rel="stylesheet" type="text/css" href="css/common.css">
+</head>
+
+<body>
+  <!-- ons-navigator enables stack pages from tab 1 page -->
+  <ons-navigator swipeable id="myRes" page="root-temp"></ons-navigator>
+
+  <!-- to not replace ons-navigator, have to set root-temp as ons-template -->
+  <ons-template id="root-temp">
+    <ons-page>
+
+      <!-- ons-toolbar make the fix title at the top, -->
+      <ons-toolbar>
+        <div class="center inside-center">
+          SkipLine
+        </div>
+      </ons-toolbar>
+
+      <!-- ons-tabbar at the bottom -->
+      <ons-tabbar swipeable position="bottom">
+        <ons-tab page="home-temp" label="Home" icon="md-home" active></ons-tab>
+        <ons-tab page="nearbyStores-temp" label="Nearby Stores" icon="md-store"></ons-tab>
+        <ons-tab page="que-temp" label="Queue" icon="md-check-square"></ons-tab>
+        <ons-tab page="profile-temp" label="Profile" icon="md-account-box"></ons-tab>
+      </ons-tabbar>
+
+    </ons-page>
+  </ons-template>
+
+  <template id="home-temp">
+    <ons-page id="home-page">
+      <div class="search-bar">
+        <input type="text" placeholder="search stores">
+        <button>Search</button>
+      </div>
+      <div class="bnr bg-center">
+        <div class="bnr-content inside-center">
+          <h3 id="bnrTitle">Sakura</h3>
+          <div class="discount">
+            <div class="inside-center">
+              Up to <br>
+              <span>40% off</span>
+            </div>
+          </div>
+          <!-- push res-page from home-temp -->
+          <ons-button class="btn-link btn" onclick="pushResPage()">Enter Queue</ons-button>
+        </div>
+      </div>
+      <div class="restaurants">
+        <h2>Stores</h2>
+        <div class="container"></div>
+
+        <!-- dynamic restaurants list will be list by call loadResList(page)  -->
+        <ons-list>
+          <div class="row">
+            <ons-lazy-repeat id="dynamic-list"></ons-lazy-repeat>
+          </div>
+        </ons-list>
+
+      </div>
+    </ons-page>
+  </template>
+
+  <template id="nearbyStores-temp">
+    <ons-page id="nearbyStores-page">
+      <ons-button class="btn title-btn" onclick="getGeoCodes();">Current coordinates</ons-button>
+      <ons-col class="location-container" id="location-container">
+        <div class="location">Latitude:
+          <input type="number">
+        </div>
+        <div class="location">Longitude:
+          <input type="number">
+        </div>
+      </ons-col>
+      <ons-button class="btn title-btn" onclick="getNearbyRes();">Find Restaurants Nearby</ons-button>
+      <div class="container" id="myResList-container">
+
+        <ons-list id="nearbyRes-list">
+        </ons-list>
+
+      </div>
+    </ons-page>
+  </template>
+
+  <template id="singleStore-temp">
+    <ons-page id="singleStore-page">
+      <ons-toolbar>
+        <div class="left">
+          <ons-back-button>Back</ons-back-button>
+        </div>
+        <div class="inside-center">Restaurant</div>
+      </ons-toolbar>
+
+      <div class="restaurant">
+        <h2 id="singleResTitle" class="inside-center"></h2>
+      </div>
+      <div class="res-content">
+        <img class="img-res" id="singleStore-img">
+        <h3 id="phoneNum"></h3>
+        <h3>Address</h3>
+        <p id="singleResAddress"></p>
+        <div class="res-btn">
+          <ons-button class="btn-link btn" onclick="pushEnterQuePage()">Enter Queue</ons-button>
+        </div>
+      </div>
+    </ons-page>
+  </template>
+
+  <template id="que-temp">
+    <ons-page id="que-page">
+
+      <ons-page>
+        <ons-tabbar swipeable position="top">
+          <ons-tab page="que-completed-temp" label="Completed">
+          </ons-tab>
+          <ons-tab page="que-process-temp" label="Process" badge="1" active>
+          </ons-tab>
+        </ons-tabbar>
+      </ons-page>
+
+      <template id="que-completed-temp">
+        <ons-page id="que-completed-page">
+          <div class="que">
+            <div class="container">
+
+              <ons-list id="completedQue-list">
+              </ons-list>
+
+            </div>
+          </div>
+        </ons-page>
+      </template>
+
+      <template id="que-process-temp">
+        <ons-page id="que-process-page">
+          <div class="que process">
+            <div class="container">
+              <div class="row">
+                <div class=" col">
+                  <div class="que-title">
+                    <h2>Cactus Club</h2>
+                    <p>Process</p>
+                  </div>
+                  <p><span>Booked time:</span> 16:40 to 16:50 pm</p>
+                  <p><span>Your number:</span> 8</p>
+                  <a href="#" class="btn">Cancel</a>
+                  <a href="#" class="btn">Skip</a>
+                  <a href="#" class="btn">Scan</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ons-page>
+      </template>
+
+    </ons-page>
+  </template>
+
+  <template id="profile-temp">
+    <ons-page id="profile-page">
+      <div class="profile">
+        <h2 class="inside-center">My Profile</h2>
+      </div>
+      <div class="name">
+        <div class="inside-center container">
+          <div class="row">
+            <div class="name-left col">
+              <img class="inside-center" src="img/profile.jpg" alt="Jude Stevens">
+            </div>
+            <div class="name-right col">
+              <p id="clientName">Jude</p>
+              <hr>
+              <p>Stevens</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="contact-info container">
+        <div class="row">
+          <div class="col-4">
+            <h4>Email</h4>
+          </div>
+          <div class="col">
+            <p>StevenesJude@gamil.com</p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-4">
+            <h4>Telephone</h4>
+          </div>
+          <div class="col">
+            <p>604-888-8888</p>
+          </div>
+        </div>
+      </div>
+    </ons-page>
+  </template>
+
+  <template id="res-temp">
+    <ons-page id="res-page">
+
+      <ons-toolbar>
+        <div class="left">
+          <ons-back-button>Back</ons-back-button>
+        </div>
+        <div class="inside-center">Restaurant</div>
+      </ons-toolbar>
+
+      <div class="restaurant">
+        <h2 id="resTitle" class="inside-center"></h2>
+      </div>
+      <div class="res-content">
+        <img class="img-res" src="img/cactus-club.jpg" alt="Cactus Club">
+        <h3>Open Hour:</h3>
+        <ol>
+          <li>Monday: 11:00am ~ 11:00pm</li>
+          <li>Tuesday: 11:00am ~ 11:00pm</li>
+          <li>Wednesday: 11:00am ~ 11:00pm</li>
+          <li>Thursday: 11:00am ~ 11:00pm</li>
+          <li>Friday: 11:00am ~ 12:00pm</li>
+          <li>Saturday: 11:00am ~ 12:00pm</li>
+          <li>Sunday: 11:00am ~ 11:00pm</li>
+        </ol>
+        <h3>Address</h3>
+        <p>6551 No. 3 Rd #1666, Richmond, BC V6Y 2B6</p>
+        <div class="res-btn">
+          <ons-button class="btn-link btn" onclick="pushEnterQuePage()">Enter Queue</ons-button>
+        </div>
+      </div>
+    </ons-page>
+  </template>
+
+  <template id="enterQue-temp">
+    <ons-page id="enterQue-page">
+      <ons-toolbar>
+        <div class="left">
+          <ons-back-button>Back</ons-back-button>
+        </div>
+        <div class="inside-center">Enter Que</div>
+      </ons-toolbar>
+      <p class="enterQue-name"><span>Hello: </span><span id="enterQueName"></span></p>
+      <div class="que-resName">
+        <h2 id="enterQueTitlte" class="inside-center"></h2>
+      </div>
+
+      <div class="form-group">
+        <label for="totalPeople">Total People: <span id="currPeople">2</span></label>
+        <ons-row style="margin-top: 10px;">
+          <ons-col class="range-ends">1</ons-col>
+          <ons-col>
+            <ons-range id="totalPeople" class="range-people" value="2" min="1" max="5" step="1"
+              onchange="updatePeople(this)"></ons-range>
+          </ons-col>
+          <ons-col class="range-ends">5</ons-col>
+        </ons-row>
+      </div>
+
+      <div class="enterQue container">
+        <div class="firstRow row">
+          <div class="leftCol col-10">
+            Available Time
+          </div>
+          <div class="col-2">
+            <img src="img/down-arrow.png">
+          </div>
+        </div>
+        <div class=" row">
+          <div class="col-12">
+
+            <ons-list>
+              <ons-list-item tappable>
+                <label class="left">
+                  <ons-radio name="arr-time" input-id="radio-1" value="16:40 to 16:50" checked></ons-radio>
+                </label>
+                <label for="radio-1" class="center">
+                  16:40 to 16:50
+                </label>
+              </ons-list-item>
+              <ons-list-item tappable>
+                <label class="left">
+                  <ons-radio name="arr-time" input-id="radio-2" value="16:50 to 17:00"></ons-radio>
+                </label>
+                <label for="radio-2" class="center">
+                  16:50 to 17:00
+                </label>
+              </ons-list-item>
+              <ons-list-item tappable>
+                <label class="left">
+                  <ons-radio name="arr-time" input-id="radio-2" value="17:00 to 17:10"></ons-radio>
+                </label>
+                <label for="radio-3" class="center">
+                  17:00 to 17:10
+                </label>
+              </ons-list-item>
+              <ons-list-item tappable>
+                <label class="left">
+                  <ons-radio name="arr-time" input-id="radio-2" value="17:10 to 17:20"></ons-radio>
+                </label>
+                <label for="radio-4" class="center">
+                  17:10 to 17:20
+                </label>
+              </ons-list-item>
+            </ons-list>
+
+          </div>
+        </div>
+        <div class="num">
+          <p>Your Number</p>
+          <img src="img/8.png">
+        </div>
+      </div>
+
+      <ons-fab position="bottom right">
+        <ons-icon id="booking-btn" icon="md-shopping-cart" onclick="submitBooking()"></ons-icon>
+      </ons-fab>
+
+    </ons-page>
+  </template>
+
+  <!-- ons-dialog pops up once click fab -->
+  <ons-dialog id="booking-confirm-dialog">
+    <div style="text-align: center; padding: 10px;">
+      <h3>
+        Thank you!
+      </h3>
+
+      <p>
+        <span id="confirm-name"></span>! Your booking at <span id="confirm-res"></span> from <span
+          id="confirm-time"></span> for
+        <span id="confirm-people"></span> people has been recieved and will be processed.
+      </p>
+
+      <p>If you do not recieve a confirmation email within 24hrs please contact us.</p>
+
+      <p>
+        <ons-button onclick="navToMain()">Close</ons-button>
+      </p>
+    </div>
+  </ons-dialog>
+
+  <!-- ******************** spinner modal ******************** -->
+  <ons-modal id="spinner-modal">
+    <div style="margin: auto;">
+      <ons-icon icon="md-spinner" size="100px" spin></ons-icon>
+    </div>
+  </ons-modal>
+
+  <script type="text/javascript" src="cordova.js"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=Your_API_Key&libraries=places"></script>
+  <script type="text/javascript" src="./js/restaurants.js"></script>
+  <script type="text/javascript" src="./js/completedlist.js"></script>
+
+
+  <script>
+    // prechange function fires root-temp fires
+    document.addEventListener('prechange', function (event) {
+
+      var setLabel = 'SkipLine';
+      // if the label=Home, the title will change to be SkipLine.
+      if (event.tabItem.getAttribute('label') !== 'Home') {
+        setLabel = event.tabItem.getAttribute('label');
+      }
+      //when a tab changes, the toolbar center section to the current label
+      document.querySelector('ons-toolbar .center').innerHTML = setLabel;
+
+    });
+
+    //init function helps to fire unloaded pages 
+    document.addEventListener('init', function (event) {
+
+      var page = event.target;
+
+      if (page.id === 'home-page') {
+        loadResList(page);
+      }
+
+      if (page.id === 'nearbyStores-page') {
+        // getArticleList();
+      }
+
+      if (page.id === 'singleStore-page') {
+        getSingleRes(page.data.sTitle, page.data.sLatitude,page.data.sLongitude);
+      }
+
+      if (page.id === 'que-completed-page') {
+        loadCompletedList(page);
+      }
+
+      if (page.id === 'res-page') {
+
+        page.querySelector('#resTitle').innerHTML = page.data.cTitle;
+
+      }
+
+      if (page.id === 'enterQue-page') {
+
+        page.querySelector('#enterQueTitlte').innerHTML = page.data.cResTitle;
+        page.querySelector('#enterQueName').innerHTML = page.data.cName;
+
+      }
+
+    });
+
+    //push page to res-temp page and pass the title text
+    function pushResPage() {
+
+      var currTitle = document.querySelector('#bnrTitle').innerText;
+
+      document.querySelector('#myRes').pushPage('res-temp', { data: { cTitle: currTitle, } });
+
+    }
+
+    // push page to Enter Que page and pass the title text and client name 
+    function pushEnterQuePage() {
+
+      var currResTitle = document.querySelector('#resTitle').innerText;
+      var currName = document.querySelector('#clientName').innerText;
+
+      document.querySelector('#myRes').pushPage('enterQue-temp', { data: { cResTitle: currResTitle, cName: currName, } });
+
+    }
+
+    // when click the fab, 
+    function submitBooking() {
+
+      var page = document.querySelector('#enterQue-page');
+
+      var spinnerModal = document.querySelector('#spinner-modal');
+
+      //show spinnerModal at first
+      spinnerModal.show();
+
+      //collect passed data
+      var bookingData = {
+        clientName: page.querySelector('#enterQueName').innerText,
+        resName: page.querySelector('#enterQueTitlte').innerText,
+        arrTime: page.querySelector('input[name="arr-time"]:checked').value,
+        totalPeople: Number.parseInt(page.querySelector('#totalPeople').value)
+        //other data as needed
+      }
+
+      setTimeout(function () {
+
+        //hide spinnerModal 
+        spinnerModal.hide();
+
+        var bookingDialog = document.getElementById('booking-confirm-dialog');
+
+        bookingDialog.querySelector('#confirm-name').innerHTML = '<span class="dialog-em">' + bookingData.clientName + '</span>';
+        bookingDialog.querySelector('#confirm-res').innerHTML = '<span class="dialog-em">' + bookingData.resName + '</span>';
+        bookingDialog.querySelector('#confirm-time').innerHTML = '<span class="dialog-em">' + bookingData.arrTime + '</span>';
+        bookingDialog.querySelector('#confirm-people').innerHTML = '<span class="dialog-em">' + bookingData.totalPeople + '</span>';
+
+        //show dialog
+        bookingDialog.show();
+
+      }, 2000);
+    }
+
+    function pushSignleRes(sTitle) {
+
+      var currTitle = document.querySelector('#nearStore-name').innerText;
+      var currLatitude = document.querySelector('#singleRes-latitude').innerText;
+      var currLongitude = document.querySelector('#singleRes-longitude').innerText;
+      document.querySelector('#myRes').pushPage('singleStore-temp', { data: { sTitle: currTitle, sLatitude: currLatitude, sLongitude: currLongitude}});
+
+    }
+
+    //poppage allows to back to the 2 pages back.
+    function navToMain() {
+
+      document.querySelector('#myRes').popPage({ times: 2 });
+
+      document.getElementById('booking-confirm-dialog').hide();
+
+    }
+
+
+    //dynamic restaurants list 
+    function loadResList(page) {
+
+      var dynList = page.querySelector('#dynamic-list');
+
+      dynList.delegate = {
+
+        createItemContent: function (i, template) {
+
+          return ons.createElement(
+
+            '<div class="col-6">' +
+            '<img src="' + resList[i].path + '" alt="' + resList[i].title + '">' +
+            '<h3>' + resList[i].title + ' | ' + resList[i].location + '</h3>' +
+            '</div>'
+
+          );
+        },
+
+        //return the total count of lsit items
+        countItems: function () {
+          return resList.length;
+        }
+      };
+
+      dynList.refresh();
+
+
+    }
+
+    //update total people once change ons-range value.
+    function updatePeople(target) {
+      document.getElementById('currPeople').innerText = target.value
+    }
+
+    //dynamic completed que list
+    function loadCompletedList(page) {
+
+      var completedQueList = page.querySelector('#completedQue-list');
+
+      for (let i = 0; i < completedList.length; i++) {
+        completedQueList.appendChild(
+          ons.createElement(
+            '<div class="row">' +
+            '<div class=" col">' +
+            '<div class="que-title">' +
+            '<h2>' + completedList[i].title + '</h2>' +
+            '<p>Done</p>' +
+            '</div>' +
+            '<p><span>Booked time:</span>' + completedList[i].time + '</p>' +
+            '<p><span>Your number:</span>' + completedList[i].num + '</p>' +
+            '<a href="#" class="btn">Review</a>' +
+            '</div>' +
+            '</div>'
+          )
+        );
+      }
+
+    }
+
+    //Geolocation to find current location
+    function getGeoCodes() {
+
+      navigator.geolocation.getCurrentPosition(
+        function (position) {
+          /*success*/
+          var locContainer = document.getElementById('location-container');
+          var allLocation = locContainer.getElementsByTagName('input');
+          allLocation[0].value = position.coords.latitude;
+          allLocation[1].value = position.coords.longitude;
+
+        },
+        function (error) {
+          /*error*/
+          document.getElementById('location-container').innerHTML +=
+            '<li style="color:red">Error Code: ' + error.code + '</li>' +
+            '<li style="color:red">Error Msg: ' + error.message + '</li>'
+        },
+        {
+          enableHighAccuracy: true
+        })
+    }
+
+    //find stores near by you
+    var limit = 2;
+    var offset = 0;
+    function getNearbyRes() {
+      //show the spinner
+      var spinnerModal = document.querySelector('#spinner-modal');
+      spinnerModal.show();
+
+      var locContainer = document.getElementById('location-container');
+      var allLocation = locContainer.getElementsByTagName('input');
+
+      $.ajax('https://api.yelp.com/v3/businesses/search?term=restaurants&latitude=' + (allLocation[0].value) + '&longitude=' + (allLocation[1].value) + '&limit=' + index + '&sort_by=distance',
+        {
+          headers: {
+            "Authorization": "Bearer mgMbue1zEt9cLq08ItRlJv_f2vfffQ6I80UaIpHXVVSjVKY9fe4yoYfA1C4tHsrh38nQBK8EDVp8jF3EXoemQ4zEC3UZUZRpzEHhfRoWFsGHQnbgGjigzYkbFZnfYHYx"
+          }
+        })
+        .done(function (result) {
+
+          populateList(result);
+
+        })
+
+        .fail(function (xhr, status, error) {
+          //normally handle situation for end user
+          console.log('error' + xhr.status);
+          //echo sorry you are not reaching this
+        })
+        .always(function () {
+          //hide the spinner
+          spinnerModal.hide();
+        })
+    }
+    function loadMore() {
+
+      offset += limit;
+
+      getNearbyRes();
+    }
+    
+    // passed sTitle, sLatitude, sLongitude to the API
+    function getSingleRes(sTitle, sLatitude, sLongitude) {
+
+       // CG: for debugging
+       var msgArea = document.querySelector('#msgSpaceSingle');
+      msgArea.innerHTML += '<div>getSingleRes() passed with' + sTitle +  ' - ' + sLatitude + ' x ' + sLongitude + '</div>';
+
+      //show the spinner
+      var spinnermodal = document.querySelector('#spinner-modal');
+      spinnermodal.show();
+
+      //Get API
+      $.ajax('https://api.yelp.com/v3/businesses/search?term=' + sTitle + '&latitude=' + sLatitude + '&longitude=' + sLongitude,
+        {
+          headers: {
+            "Authorization": "Bearer mgMbue1zEt9cLq08ItRlJv_f2vfffQ6I80UaIpHXVVSjVKY9fe4yoYfA1C4tHsrh38nQBK8EDVp8jF3EXoemQ4zEC3UZUZRpzEHhfRoWFsGHQnbgGjigzYkbFZnfYHYx"
+          }
+        })
+        .done(function (result) {
+          console.log(result);
+
+          // CG: my debugging
+          msgArea.innerHTML += '<div>request good with:' + result.businesses.length + ' results</div>';
+
+          msgArea.innerHTML += '<div>result:' + JSON.stringify(result) + '</div>';
+
+          setSingleResData(result.businesses[0]);
+        })
+        .fail(function (xhr, status, error) {
+          //normally handle situation for end user
+          console.log('error' + xhr.status);
+
+          // CG: my debugging
+          msgArea.innerHTML += '<div>error:' + xhr.status + '</div>';
+        })
+        .always(function () {
+          //hide the spinner
+          spinnermodal.hide();
+        })
+    }
+
+    //loop restaurant list
+    function populateList(jsonData) {
+
+      var myResList = document.getElementById('nearbyRes-list');
+
+      //clear the list
+      myResList.querySelectorAll('ons-list-item').forEach(n => n.remove());
+
+      // since we aren't using lazy-list we can just add items and don't need use delegates
+      for (let i = 0; i < jsonData.businesses.length; i++) {
+        // var postDate = new Date(jsonData[i].date);
+
+        myResList.appendChild(
+          ons.createElement(
+            '<ons-list-item>' +
+            '<div class="row">' +
+            '<div class=" col">' +
+            '<div class="que-title">' +
+            '<h2 id="nearStore-name">' + jsonData.businesses[i].name + '</h2>' +
+            '</div>' +
+            '<p><span>Address: </span>' + jsonData.businesses[i].location.display_address + '</p>' +
+            '<p>Latitude : <span id="singleRes-latitude">' + jsonData.businesses[i].coordinates.latitude + '</span></p>' +
+            '<p>Longitude : <span id="singleRes-longitude">' + jsonData.businesses[i].coordinates.longitude + '</span></p>' +
+            '<p><span>Distance: </span>' + jsonData.businesses[i].distance + '</p>' +
+            '<a href="#" class="btn" onclick="pushSignleRes(\'' + jsonData.businesses[i].sTitle + '\', \'' + jsonData.businesses[i].sLatitude + '\', \'' + jsonData.businesses[i].sLongitude + '\' )" icon="md-caret-right">More detail</a>' +
+            '</div>' +
+            '</div></ons-list-item>'
+
+
+          )
+        );
+
+      }
+
+      var myResListContainer = document.getElementById('myResList-container');
+      var loadBtn = document.createElement('a');
+      loadBtn.innerHTML = 'Load More';
+      loadBtn.className = 'btn-link btn load-btn';
+      loadBtn.onclick = 'loadMore()';
+      myResListContainer.appendChild(loadBtn);
+
+    }
+    
+    function loadMore() {
+            index += 10;
+            getNearbyRes();
+
+          }
+
+    //get the single restaurant's info
+    function setSingleResData(singleStore) {
+      
+
+      var singleStorePage = document.getElementById('singleStore-page');
+
+      //set the title
+      singleStorePage.querySelector('#singleResTitle').innerHTML = singleStore.name;
+
+      //set the image
+      singleStorePage.querySelector('#singleStore-img').src = singleStore.image_url;
+
+      //set the phone
+      singleStorePage.querySelector('#phoneNum').src = singleStore.phone;
+
+      //set the address
+      singleStorePage.querySelector('#singleResAddress').src = singleStore.location.display_address;
+
+
+
+    }
+
+   </script>
+</body>
+
+</html>
